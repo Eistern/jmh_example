@@ -8,12 +8,12 @@ import org.openjdk.jmh.infra.Blackhole;
 @Measurement(iterations = 32, batchSize = 8, time = 1)
 @State(Scope.Thread)
 public class CompareIsInteger {
-    private String input = "56786422";
+    private static final String INPUT = "56786422";
 
     @Benchmark
     public void isIntegerException(final Blackhole blackhole) {
         try {
-            Integer.parseInt(input);
+            Integer.parseInt(INPUT);
             blackhole.consume(true);
         } catch (NumberFormatException e) {
             blackhole.consume(false);
@@ -22,7 +22,7 @@ public class CompareIsInteger {
 
     @Benchmark
     public void isIntegerLinear(final Blackhole blackhole) {
-        for (byte stringByte : input.getBytes()) {
+        for (byte stringByte : INPUT.getBytes()) {
             if (!Character.isDigit(stringByte)) {
                 blackhole.consume(false);
                 return;
@@ -33,7 +33,7 @@ public class CompareIsInteger {
 
     @Benchmark
     public void isIntegerRegexp(final Blackhole blackhole) {
-        boolean matches = input.matches("^\\d+$");
+        boolean matches = INPUT.matches("^\\d+$");
         blackhole.consume(matches);
     }
 }
